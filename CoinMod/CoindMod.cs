@@ -2,6 +2,7 @@
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
+using PluginConfig.API;
 using UltrakillMods.UnityWav;
 using UnityEngine;
 using static Common.Statics;
@@ -12,7 +13,14 @@ namespace UltrakillMods {
         private static AudioClip? audioClip;
         private readonly Harmony harmony = new Harmony("CoinMod");
 
+        private PluginConfigurator? config;
+
         private void Awake() {
+            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+
+            config = PluginConfigurator.Create("Coin Mod", "com.einfachirgendwa1.coinMod");
+            config.SetIconWithURL($"file://{Path.Combine(directory, "icon.png")}");
+
             byte[] sound;
             using (Stream stream = GetEmbeddedResource("ThrowCoinSound.wav")) {
                 sound = new byte[stream.Length];
