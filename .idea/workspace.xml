@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a99c3def-217e-4004-8757-d74c6df7f510" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/CoinMod/CoinMod.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CoinMod/UnityWav/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CoinMod/UnityWav/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CoinMod/UnityWav/WavUtility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UltrakillMod/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UltrakillMod/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UltrakillModTry2/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod.sln" beforeDir="false" afterPath="$PROJECT_DIR$/UltrakillMods.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod.sln.DotSettings.user" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/EmbeddedResources/ThrowCoinSound.wav" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/EmbeddedResources/ThrowCoinSound.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/Result/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/BuildResult/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/Result/UltrakillMod/UltrakillMod.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/Result/UltrakillMod/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/BuildResult/CoinMod/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/Result/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/BuildResult/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/Result/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/BuildResult/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/UltrakillMod.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/CoindMod.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/UltrakillMod.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/UnityWav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/build.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UltrakillMod/nuget.config" beforeDir="false" afterPath="$PROJECT_DIR$/CoinMod/nuget.config" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="37KmvVlXVaPNU0Umw9hVEt6FJ2g" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-4e2b1448bda8-9a97661f3031-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.27397.106" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a99c3def-217e-4004-8757-d74c6df7f510" name="Changes" comment="" />
+      <created>1766660368709</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1766660368709</updated>
+    </task>
+    <servers />
+  </component>
+</project>

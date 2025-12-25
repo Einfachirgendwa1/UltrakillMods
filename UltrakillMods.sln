@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltrakillMod", "UltrakillMod\UltrakillMod.csproj", "{160279BF-7FE6-43FD-B544-8E5C4515D945}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinMod", "CoinMod\CoinMod.csproj", "{160279BF-7FE6-43FD-B544-8E5C4515D945}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{387CB5E1-AD6B-478F-92E0-4D7DE7AFC8D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,9 @@ Global
 		{160279BF-7FE6-43FD-B544-8E5C4515D945}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{160279BF-7FE6-43FD-B544-8E5C4515D945}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{160279BF-7FE6-43FD-B544-8E5C4515D945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{387CB5E1-AD6B-478F-92E0-4D7DE7AFC8D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{387CB5E1-AD6B-478F-92E0-4D7DE7AFC8D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{387CB5E1-AD6B-478F-92E0-4D7DE7AFC8D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{387CB5E1-AD6B-478F-92E0-4D7DE7AFC8D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
