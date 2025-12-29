@@ -10,10 +10,20 @@
     },
     "sourceName": "ModTemplate",
     "symbols": {
-        "guid": {
+        "GUID": {
             "type": "parameter",
             "defaultValue": "com.einfachirgendwa1.ukmod",
-            "replaces": "defaultGuid"
+            "replaces": "templateGuid"
+        },
+        "Description": {
+            "type": "parameter",
+            "defaultValue": "A mod for ULTRAKILL.",
+            "replaces": "templateDescription"
+        },
+        "Display Name": {
+            "type": "parameter",
+            "defaultValue": "Display Name",
+            "replaces": "Mod Template"
         }
     }
 }

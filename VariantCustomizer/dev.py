@@ -3,7 +3,7 @@ from os.path import expandvars
 from pathlib import Path
 from shutil import copy, rmtree, copytree
 
-base_dir = expandvars(r"%appdata%\r2modmanPlus-local\ULTRAKILL\profiles\dev\BepInEx\plugins")
+base_dir = expandvars(r"%appdata%\r2modmanPlus-local\ULTRAKILL\profiles\default-ultrakill\BepInEx\plugins")
 
 
 def get_mod_dir(project_name: str | None = None) -> str:

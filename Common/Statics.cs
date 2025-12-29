@@ -1,19 +1,27 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using BepInEx.Logging;
+using PluginConfig.API;
 
 namespace Common {
     public static class Statics {
         public static readonly ManualLogSource logSource = new ManualLogSource("Mods");
 
+        public static PluginConfigurator InitPluginConfig(string displayName, string guid) {
+            string directory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!;
+
+            PluginConfigurator config = PluginConfigurator.Create(displayName, guid);
+            config.SetIconWithURL($"file://{Path.Combine(directory, "icon.png")}");
+
+            return config;
+        }
+
         public static Stream GetEmbeddedResource(string path) {
             string fullPath = $"UltrakillMods.EmbeddedResources.{path}";
 
-            Assembly callee = new StackTrace().GetFrame(1).GetMethod().DeclaringType!.Assembly;
-            Stream? stream = callee.GetManifestResourceStream(fullPath);
+            Stream? stream = Assembly.GetCallingAssembly().GetManifestResourceStream(fullPath);
 
             Assert(stream != null, () => $"Could not find embedded resource: {path} ('{fullPath}')");
             return stream;

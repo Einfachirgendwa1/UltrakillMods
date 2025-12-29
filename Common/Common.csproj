@@ -14,4 +14,10 @@
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Reference Include="PluginConfigurator">
+            <HintPath>..\CoinMod\Libs\PluginConfigurator.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
 </Project>

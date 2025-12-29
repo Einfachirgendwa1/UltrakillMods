@@ -9,7 +9,7 @@ using static Common.Statics;
 
 namespace CoinMod {
     [BepInPlugin("com.einfachirgendwa1.coinMod", "CoinMod", "1.0.0.0")]
-    public class CoindMod : BaseUnityPlugin {
+    public class CoinMod : BaseUnityPlugin {
         private static AudioClip? audioClip;
         private readonly Harmony harmony = new Harmony("CoinMod");
 
@@ -28,7 +28,7 @@ namespace CoinMod {
             }
 
             MethodInfo throwCoin = AccessTools.Method(typeof(Revolver), "ThrowCoin")!;
-            HarmonyMethod prefix = new HarmonyMethod(typeof(CoindMod), nameof(PlaySound));
+            HarmonyMethod prefix = new HarmonyMethod(typeof(CoinMod), nameof(PlaySound));
             harmony.Patch(throwCoin, prefix);
             audioClip = WavUtility.ToAudioClip(sound);
         }

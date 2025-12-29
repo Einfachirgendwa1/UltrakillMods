@@ -1,11 +1,11 @@
 {
-  "name": "CoinMod",
-  "author": "Einfachirgendwa1",
-  "version_number": "1.0.0",
-  "website_url": "",
-  "description": "A mod that plays a really good sound when a coin is thrown",
-  "dependencies": [
-    "BepInEx-BepInExPack-5.4.2100",
-    "EternalsTeam-PluginConfigurator-1.10.2"
-  ]
+    "name": "ModTemplate",
+    "author": "Einfachirgendwa1",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "templateDescription",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100",
+        "EternalsTeam-PluginConfigurator-1.10.2"
+    ]
 }
