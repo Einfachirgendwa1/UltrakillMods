@@ -22,9 +22,17 @@ public class VariantConfiguration {
         renderer.SetPropertyBlock(block);
     }
 
+    private static void MarkDirty(ColorField.ColorValueChangeEvent _) {
+        VariantCustomizer.Dirty = true;
+    }
+
     internal void Subpanel(ConfigPanel parentPanel) {
         color1 = new ColorField(parentPanel, "Color 1", parentPanel.guid + ".color1", Color.white);
         color2 = new ColorField(parentPanel, "Color 2", parentPanel.guid + ".color2", Color.white);
         color3 = new ColorField(parentPanel, "Color 3", parentPanel.guid + ".color3", Color.white);
+
+        color1.onValueChange += MarkDirty;
+        color2.onValueChange += MarkDirty;
+        color3.onValueChange += MarkDirty;
     }
 }
