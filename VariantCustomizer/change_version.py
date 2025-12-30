@@ -1,4 +1,5 @@
 ﻿import json
+import os
 import pathlib
 
 
@@ -32,3 +33,16 @@ for file in files_to_update:
 
 for file in cs_files:
     replace_in_file(str(file), current_version, new_version)
+
+print("Done.")
+dont_quit = input("Create commit, push, tag and compile for release? [y/N] ")
+if dont_quit.lower().strip() != "y":
+    exit(0)
+
+os.system("git add .")
+os.system("git commit")
+os.system(f"git tag -a {new_version}")
+os.system(f"git push")
+os.system(f"cd .. && git push subtree VariantCustomizer VariantCustomizer main")
+os.system("python build_zip.py")
+print("Done.")
