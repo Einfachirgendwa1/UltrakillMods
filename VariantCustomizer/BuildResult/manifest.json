@@ -1,11 +1,11 @@
 {
-    "name": "VariantCustomizer",
-    "author": "Einfachirgendwa1",
-    "version_number": "1.0.0",
-    "website_url": "",
-    "description": "Allows you to change colors according to weapon variation.",
-    "dependencies": [
-        "BepInEx-BepInExPack-5.4.2100",
-        "EternalsTeam-PluginConfigurator-1.10.2"
-    ]
+  "name": "VariantCustomizer",
+  "author": "Einfachirgendwa1",
+  "version_number": "v1.0.0",
+  "website_url": "https://github.com/Einfachirgendwa1/VariantCustomizer",
+  "description": "Allows you to change colors according to weapon variation.",
+  "dependencies": [
+    "BepInEx-BepInExPack-5.4.2100",
+    "EternalsTeam-PluginConfigurator-1.10.2"
+  ]
 }

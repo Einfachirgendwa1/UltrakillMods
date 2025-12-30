@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace VariantCustomizer;
 
-[BepInPlugin("com.einfachirgendwa1.variantCustomizer", "VariantCustomizer", "1.0.0.0")]
+[BepInPlugin("com.einfachirgendwa1.variantCustomizer", "VariantCustomizer", "v1.0.0")]
 public class VariantCustomizer : BaseUnityPlugin {
     internal static bool Dirty;
 
