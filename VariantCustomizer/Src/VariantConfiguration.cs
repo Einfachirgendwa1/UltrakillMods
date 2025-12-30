@@ -5,21 +5,12 @@ using UnityEngine;
 namespace VariantCustomizer;
 
 public class VariantConfiguration {
-    private static readonly int CustomColor1 = Shader.PropertyToID("_CustomColor1");
-    private static readonly int CustomColor2 = Shader.PropertyToID("_CustomColor2");
-    private static readonly int CustomColor3 = Shader.PropertyToID("_CustomColor3");
-
     private ColorField? color1;
     private ColorField? color2;
     private ColorField? color3;
 
-    internal void ApplyToRenderer(Renderer renderer) {
-        MaterialPropertyBlock block = new();
-        renderer.GetPropertyBlock(block);
-        block.SetColor(CustomColor1, color1!.value);
-        block.SetColor(CustomColor2, color2!.value);
-        block.SetColor(CustomColor3, color3!.value);
-        renderer.SetPropertyBlock(block);
+    internal GunColorPreset GetColorPreset() {
+        return new GunColorPreset(color1!.value, color2!.value, color3!.value);
     }
 
     private static void MarkDirty(ColorField.ColorValueChangeEvent _) {

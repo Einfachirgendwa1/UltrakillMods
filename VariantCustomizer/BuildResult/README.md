@@ -1,6 +1,6 @@
 ## Variant Customizer
 
-- Version v1.0.0
+- Version 1.1.0
 - Allows you to change colors according to weapon variation.
 - Created by Einfachirgendwa1 and licensed under MIT
 

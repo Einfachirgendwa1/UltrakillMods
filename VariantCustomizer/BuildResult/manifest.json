@@ -1,7 +1,7 @@
 {
   "name": "VariantCustomizer",
   "author": "Einfachirgendwa1",
-  "version_number": "v1.0.0",
+  "version_number": "1.1.0",
   "website_url": "https://github.com/Einfachirgendwa1/VariantCustomizer",
   "description": "Allows you to change colors according to weapon variation.",
   "dependencies": [
