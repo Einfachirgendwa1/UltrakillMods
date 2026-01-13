@@ -34,7 +34,6 @@ namespace CoinMod {
         }
 
         private static void PlaySound(Revolver __instance) {
-            logSource.LogMessage("Playing sound!");
             AudioSource audio = PrivateField<Revolver, AudioSource>("gunAud", __instance);
             AudioSource newSource = audio.gameObject.AddComponent<AudioSource>();
             newSource.volume = audio.volume;
