@@ -24,6 +24,9 @@
         <Reference Include="PluginConfigurator">
             <HintPath>Libs\PluginConfigurator.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.UI">
+            <HintPath>Libs\UnityEngine.UI.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>

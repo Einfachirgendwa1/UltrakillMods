@@ -1,3 +1,3 @@
 ﻿namespace VariantCustomizer;
 
-public class PreviewModels { }
+internal static class PreviewModels { }

@@ -13,8 +13,8 @@ public class VariantConfiguration {
         return new GunColorPreset(color1!.value, color2!.value, color3!.value);
     }
 
-    private static void MarkDirty(ColorField.ColorValueChangeEvent _) {
-        VariantCustomizer.Dirty = true;
+    private static void Redraw(ColorField.ColorValueChangeEvent _) {
+        VariantCustomizer.Instance?.Redraw();
     }
 
     internal void Subpanel(ConfigPanel parentPanel) {
@@ -22,8 +22,8 @@ public class VariantConfiguration {
         color2 = new ColorField(parentPanel, "Color 2", parentPanel.guid + ".color2", Color.white);
         color3 = new ColorField(parentPanel, "Color 3", parentPanel.guid + ".color3", Color.white);
 
-        color1.onValueChange += MarkDirty;
-        color2.onValueChange += MarkDirty;
-        color3.onValueChange += MarkDirty;
+        color1.onValueChange += Redraw;
+        color2.onValueChange += Redraw;
+        color3.onValueChange += Redraw;
     }
 }

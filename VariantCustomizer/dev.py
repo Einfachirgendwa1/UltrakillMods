@@ -22,6 +22,8 @@ def build(src: str = ".", res: str | None = None):
     print(f"Copying dlls")
     copy(f"{src}/obj/Debug/netstandard2.1/{project_name}.dll", res)
     copy(f"{src}/bin/Debug/netstandard2.1/Common.dll", res)
+    copy(f"{src}/obj/Debug/netstandard2.1/{project_name}.pdb", res)
+    copy(f"{src}/bin/Debug/netstandard2.1/Common.pdb", res)
 
 
 if __name__ == "__main__":

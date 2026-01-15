@@ -10,8 +10,6 @@ using UnityEngine;
 
 namespace Common {
     public static class Statics {
-        public static readonly ManualLogSource LogSource = new ManualLogSource("Mods");
-
         public static PluginConfigurator InitPluginConfig(string displayName, string guid) {
             string directory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!;
 
@@ -19,6 +17,10 @@ namespace Common {
             config.SetIconWithURL($"file://{Path.Combine(directory, "icon.png")}");
 
             return config;
+        }
+
+        public static string InExeDir(string path) {
+            return Path.Combine(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!, path);
         }
 
         public static Stream GetEmbeddedResource(string path) {
@@ -33,7 +35,6 @@ namespace Common {
         public static void Assert([DoesNotReturnIf(false)] bool cond, Func<string>? msg = null) {
             if (!cond) {
                 string fullMessage = "Assertion failed" + (msg != null ? $": {msg.Invoke()}" : "!");
-                LogSource.LogError(fullMessage);
                 throw new Exception(fullMessage);
             }
         }
