@@ -1,55 +1,64 @@
-﻿using PluginConfig.API;
+﻿using BepInEx.Logging;
+using JetBrains.Annotations;
+using PluginConfig.API;
+using VariantCustomizer.Bridge;
 
 namespace VariantCustomizer;
 
 public class Gun {
-    private readonly string name;
-    private readonly int weaponNumber;
-
-    private readonly GunConfiguration mainGun = new();
     private readonly GunConfiguration? alternateGun;
+    private readonly int gun;
 
-    private ConfigPanel? mainGunPanel;
+    private readonly GunConfiguration mainGun;
+    private readonly string name;
     private ConfigPanel? alternateGunPanel;
 
-    internal bool UseCustomColors(bool visibleWithoutUnlock) {
-        return visibleWithoutUnlock || GunColorController.Instance.hasUnlockedColors[weaponNumber - 1];
-    }
+    private ConfigPanel? mainGunPanel;
 
-    public Gun(string name, bool hasVariant, int weaponNumber) {
+    internal Gun(string name, int gun, bool hasVariant) {
         this.name = name;
-        this.weaponNumber = weaponNumber;
+        this.gun = gun;
 
-        alternateGun = hasVariant ? new GunConfiguration() : null;
+        mainGun = new GunConfiguration(new VanillaColorId(gun, false));
+        alternateGun = hasVariant ? new GunConfiguration(new VanillaColorId(gun, true)) : null;
     }
 
-    public VariantConfiguration GetVariantConfig(int variantIndex, bool alternate) {
-        return (alternate ? alternateGun! : mainGun).GetVariantConfig(variantIndex);
+    internal bool UseCustomColors(bool visibleWithoutUnlock) {
+        return visibleWithoutUnlock || GunColorController.Instance.hasUnlockedColors[gun - 1];
     }
 
-    public GunColorPreset GetNormalColor(bool altVersion) {
+    internal VariantConfiguration GetVariantConfig(int variantIndex, bool alternate) {
+        return (alternate ? alternateGun! : mainGun).Variant(variantIndex);
+    }
+
+    internal GunColorPreset GetNormalColor(bool altVersion) {
         return altVersion switch {
-            false => GunColorController.Instance!.currentColors[weaponNumber - 1],
-            true  => GunColorController.Instance!.currentAltColors[weaponNumber - 1]
+            false => GunColorController.Instance!.currentColors[gun - 1],
+            true  => GunColorController.Instance!.currentAltColors[gun - 1]
         };
     }
 
-    public void Subpanel(ConfigPanel parentPanel) {
+    internal void Subpanel(ConfigPanel parentPanel, ManualLogSource logger) {
         mainGunPanel = new ConfigPanel(parentPanel, name, name);
-        mainGun.Subpanel(mainGunPanel);
+        mainGun.Subpanel(mainGunPanel, logger);
 
         if (alternateGun != null) {
             alternateGunPanel = new ConfigPanel(parentPanel, $"{name} (Alternate)", $"{name}.alt");
-            alternateGun.Subpanel(alternateGunPanel);
+            alternateGun.Subpanel(alternateGunPanel, logger);
         }
     }
 
-    public void UpdateVisibility(bool visibleWithoutUnlock) {
+    internal void UpdateVisibility(bool visibleWithoutUnlock) {
         bool visible = UseCustomColors(visibleWithoutUnlock);
 
         mainGunPanel!.hidden = !visible;
         if (alternateGunPanel != null) {
             alternateGunPanel.hidden = !visible;
         }
+    }
+
+    [MustUseReturnValue]
+    internal GunConfiguration Alternate(bool alternate) {
+        return alternate ? alternateGun! : mainGun;
     }
 }

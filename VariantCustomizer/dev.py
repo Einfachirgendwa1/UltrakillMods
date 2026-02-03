@@ -1,4 +1,5 @@
-﻿from os import system
+﻿import os
+from os import system
 from os.path import expandvars
 from pathlib import Path
 from shutil import copy, rmtree, copytree
@@ -35,3 +36,5 @@ if __name__ == "__main__":
 
     print("Copying build results")
     copytree("BuildResult", mod_dir)
+
+    os.startfile("steam://run/1229490")
