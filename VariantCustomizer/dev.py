@@ -1,4 +1,5 @@
-﻿from os import system
+﻿import os
+from os import system
 from os.path import expandvars
 from pathlib import Path
 from shutil import copy, rmtree, copytree
@@ -22,6 +23,8 @@ def build(src: str = ".", res: str | None = None):
     print(f"Copying dlls")
     copy(f"{src}/obj/Debug/netstandard2.1/{project_name}.dll", res)
     copy(f"{src}/bin/Debug/netstandard2.1/Common.dll", res)
+    copy(f"{src}/obj/Debug/netstandard2.1/{project_name}.pdb", res)
+    copy(f"{src}/bin/Debug/netstandard2.1/Common.pdb", res)
 
 
 if __name__ == "__main__":
@@ -33,3 +36,5 @@ if __name__ == "__main__":
 
     print("Copying build results")
     copytree("BuildResult", mod_dir)
+
+    os.startfile("steam://run/1229490")
