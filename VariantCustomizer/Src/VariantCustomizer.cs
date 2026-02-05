@@ -32,6 +32,9 @@ public class VariantCustomizer : BaseUnityPlugin {
 
     private static GameObject? lastShop;
 
+    private static readonly Observed<GunColors> VanillaColors = new();
+    private static readonly Observed<GunColors> ModdedColors = new();
+
     private readonly PluginConfigurator config = InitPluginConfig(
         "Variant Customizer",
         "com.einfachirgendwa1.variantCustomizer"
@@ -205,5 +208,45 @@ public class VariantCustomizer : BaseUnityPlugin {
 
         ActiveAlt.Value = gctg is { altVersion: true };
         ActiveAlt.Changed.Then(() => Logger.LogInfo($"Active alt set to {ActiveAlt.Value}"));
+
+        if (ActiveVariant.Changed || ActiveGun.Changed || ActiveAlt.Changed) CheckModdedColors();
+        else CheckVanillaColors();
+
+        // GunColorController.Instance.UpdateGunColors();
+        // gctg?.UpdatePreview();
+
+        UpdateRenderers();
+    }
+
+    private void UpdateRenderers() {
+        if (GunControl.Instance is not { currentWeapon: { } currentWeapon }) return;
+
+        VanillaColors.Value = VanillaColorId.GetColors();
+        foreach (SkinnedMeshRenderer renderer in currentWeapon.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+            Logger.LogInfo($"Rendering {VanillaColors.Value} onto {renderer.name}");
+
+            MaterialPropertyBlock block = new();
+            renderer.GetPropertyBlock(block);
+            block.SetColor(CustomColor1, VanillaColors.Value.Color1);
+            block.SetColor(CustomColor2, VanillaColors.Value.Color2);
+            block.SetColor(CustomColor3, VanillaColors.Value.Color3);
+            renderer.SetPropertyBlock(block);
+        }
+    }
+
+    private void CheckVanillaColors() {
+        VanillaColors.Value = VanillaColorId.GetColors();
+
+        if (VanillaColors.Changed) {
+            Logger.LogInfo($"Setting Modded Colors to Vanilla Colors: {VanillaColors.Value}");
+            ModdedColorId.SetColors(VanillaColors.Value);
+        }
+    }
+
+    internal void CheckModdedColors() {
+        ModdedColors.Value = ModdedColorId.GetColors();
+
+        Logger.LogInfo($"Setting Vanilla Colors to Modded Colors: {ModdedColors.Value}");
+        VanillaColorId.SetColors(ModdedColors.Value);
     }
 }
