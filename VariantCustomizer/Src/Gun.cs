@@ -3,52 +3,19 @@
 namespace VariantCustomizer;
 
 public class Gun {
-    private readonly GunConfiguration? alternateGun;
+    private readonly Variant blueVariant;
+    private readonly Variant greenVariant;
+    private readonly Variant redVariant;
 
-    private readonly GunConfiguration mainGun;
-    private readonly string name;
-    private readonly int weaponNumber;
-    private ConfigPanel? alternateGunPanel;
-
-    private ConfigPanel? mainGunPanel;
-
-    public Gun(string name, bool hasVariant, int weaponNumber) {
-        this.name = name;
-        this.weaponNumber = weaponNumber;
-        mainGun = new GunConfiguration(weaponNumber - 1, false);
-
-        alternateGun = hasVariant ? new GunConfiguration(weaponNumber - 1, true) : null;
-    }
-
-    internal bool UseCustomColors(bool visibleWithoutUnlock) =>
-        visibleWithoutUnlock || GunColorController.Instance.hasUnlockedColors[weaponNumber - 1];
-
-    public VariantConfiguration GetVariantConfig(int variantIndex, bool alternate) =>
-        (alternate ? alternateGun! : mainGun).GetVariantConfig(variantIndex);
-
-    public GunColorPreset GetNormalColor(bool altVersion) {
-        return altVersion switch {
-            false => GunColorController.Instance!.currentColors[weaponNumber - 1],
-            true  => GunColorController.Instance!.currentAltColors[weaponNumber - 1]
-        };
+    public Gun(int gun, bool alt) {
+        blueVariant = new Variant(gun, alt, 0);
+        greenVariant = new Variant(gun, alt, 1);
+        redVariant = new Variant(gun, alt, 2);
     }
 
     public void Subpanel(ConfigPanel parentPanel) {
-        mainGunPanel = new ConfigPanel(parentPanel, name, name);
-        mainGun.Subpanel(mainGunPanel);
-
-        if (alternateGun != null) {
-            alternateGunPanel = new ConfigPanel(parentPanel, $"{name} (Alternate)", $"{name}.alt");
-            alternateGun.Subpanel(alternateGunPanel);
-        }
-    }
-
-    public void UpdateVisibility(bool visibleWithoutUnlock) {
-        bool visible = UseCustomColors(visibleWithoutUnlock);
-
-        mainGunPanel!.hidden = !visible;
-        if (alternateGunPanel != null) {
-            alternateGunPanel.hidden = !visible;
-        }
+        blueVariant.Subpanel(new ConfigPanel(parentPanel, "Blue Variant", parentPanel.guid + ".blue"));
+        greenVariant.Subpanel(new ConfigPanel(parentPanel, "Green Variant", parentPanel.guid + ".green"));
+        redVariant.Subpanel(new ConfigPanel(parentPanel, "Red Variant", parentPanel.guid + ".red"));
     }
 }

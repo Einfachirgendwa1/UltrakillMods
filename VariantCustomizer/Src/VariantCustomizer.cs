@@ -5,7 +5,6 @@ using PluginConfig.API;
 using PluginConfig.API.Fields;
 using UnityEngine;
 using UnityEngine.UI;
-using VariantCustomizer.Bridge;
 using static Common.Statics;
 
 namespace VariantCustomizer;
@@ -28,12 +27,9 @@ public class VariantCustomizer : BaseUnityPlugin {
         "Rocket Launcher Window"
     };
 
-    internal static bool Dirty;
+    private static bool dirty;
 
     private static GameObject? lastShop;
-
-    private static readonly Observed<GunColors> VanillaColors = new();
-    private static readonly Observed<GunColors> ModdedColors = new();
 
     private readonly PluginConfigurator config = InitPluginConfig(
         "Variant Customizer",
@@ -43,11 +39,8 @@ public class VariantCustomizer : BaseUnityPlugin {
     private BoolField? allowNotUnlocked;
     private GameObject? currentWeaponCache;
 
-    private Gun[] guns = { };
+    private GunSlot[] guns = { };
     private BoolField? modEnabled;
-
-    private static VariantColorId ModdedColorId => new(ActiveGun.Value, ActiveAlt.Value, ActiveVariant.Value);
-    private static VanillaColorId VanillaColorId => new(ActiveGun.Value, ActiveAlt.Value);
 
     private void Awake() {
         modEnabled = new BoolField(config.rootPanel, "Enabled", "enabled", true);
@@ -60,21 +53,21 @@ public class VariantCustomizer : BaseUnityPlugin {
         );
 
         guns = new[] {
-            new Gun("Revolver", true, 1),
-            new Gun("Shotgun", true, 2),
-            new Gun("Nailgun", true, 3),
-            new Gun("Railgun", false, 4),
-            new Gun("Rocket Launcher", false, 5)
+            new GunSlot("Revolver", true, 1),
+            new GunSlot("Shotgun", true, 2),
+            new GunSlot("Nailgun", true, 3),
+            new GunSlot("Railgun", false, 4),
+            new GunSlot("Rocket Launcher", false, 5)
         };
 
-        foreach (Gun gun in guns) {
+        foreach (GunSlot gun in guns) {
             gun.Subpanel(config.rootPanel);
         }
 
-        modEnabled.onValueChange += _ => Dirty = true;
+        modEnabled.onValueChange += _ => dirty = true;
         allowNotUnlocked.onValueChange += data => {
-            Dirty = true;
-            foreach (Gun gun in guns) {
+            dirty = true;
+            foreach (GunSlot gun in guns) {
                 gun.UpdateVisibility(data.value);
             }
         };
@@ -98,9 +91,9 @@ public class VariantCustomizer : BaseUnityPlugin {
         if (gunControl is null) return;
 
         GameObject currentWeapon = gunControl.currentWeapon;
-        if (currentWeapon is null || currentWeapon == currentWeaponCache && !Dirty) return;
+        if (currentWeapon is null || currentWeapon == currentWeaponCache && !dirty) return;
         currentWeaponCache = currentWeapon;
-        Dirty = false;
+        dirty = false;
 
         GunColorGetter colorGetter = currentWeapon.GetComponentInChildren<GunColorGetter>();
         bool alternate = colorGetter is not null && colorGetter.altVersion;
@@ -110,35 +103,18 @@ public class VariantCustomizer : BaseUnityPlugin {
             VariantColorId cid = new(gunControl.currentSlotIndex - 1, alternate,
                 gunControl.currentVariationIndex);
 
-            GunColors colors = cid.GetColors();
+            GunColorPreset colors = cid.GetColors();
             Logger.LogInfo($"got colors for {cid.ColorId("<num>")}: " + colors);
 
             MaterialPropertyBlock block = new();
             renderer.GetPropertyBlock(block);
-            block.SetColor(CustomColor1, colors.Color1);
-            block.SetColor(CustomColor2, colors.Color2);
-            block.SetColor(CustomColor3, colors.Color3);
+            block.SetColor(CustomColor1, colors.color1);
+            block.SetColor(CustomColor2, colors.color2);
+            block.SetColor(CustomColor3, colors.color3);
             renderer.SetPropertyBlock(block);
         }
     }
 
-    /// <summary>
-    ///     Deactivates the GameObject at "Variation Screen/Variations/Info and Color
-    ///     Panel/ColorButton".
-    ///     Deactivates everything at "Variation Screen/Variations/Variation Panel
-    ///     ([Blue/Green/Red])/Equipment/Buttons/*".
-    ///     Loads a ColorButton at every "Variation Screen/Variations/Variation Panel
-    ///     ([Blue/Green/Red])/Equipment"
-    /// </summary>
-    /// <param name="window">
-    ///     Should be a GameObject at "Shop/Canvas/Background/Main
-    ///     Panel/Weapons"
-    /// </param>
-    /// <param name="gun">The index of the gun</param>
-    /// <exception cref="NullReferenceException">
-    ///     Any of the GameObjects that should be
-    ///     deactivated don't exist
-    /// </exception>
     private void PatchShopTerminal(GameObject window, int gun) {
         GameObject variations = window.FindAssertExists(Logger, "Variation Screen", "Variations");
         GameObject colorButton = variations.FindAssertExists(Logger, "Info and Color Panel", "ColorButton");
@@ -193,60 +169,5 @@ public class VariantCustomizer : BaseUnityPlugin {
 
             Canvas.ForceUpdateCanvases();
         }
-    }
-
-    internal void Redraw() {
-        if (GunControl.Instance is not { currentWeapon: { } currentWeapon } gunControl) return;
-
-        ActiveGun.Value = gunControl.currentSlotIndex;
-        ActiveVariant.Changed.Then(() => Logger.LogInfo($"Active gun set to {ActiveGun.Value}"));
-
-        ActiveVariant.Value = gunControl.currentVariationIndex + 1;
-        ActiveVariant.Changed.Then(() => Logger.LogInfo($"Active variation changed to {ActiveVariant.Value}"));
-
-        GunColorTypeGetter gctg = currentWeapon.GetComponentInChildren<GunColorTypeGetter>();
-
-        ActiveAlt.Value = gctg is { altVersion: true };
-        ActiveAlt.Changed.Then(() => Logger.LogInfo($"Active alt set to {ActiveAlt.Value}"));
-
-        if (ActiveVariant.Changed || ActiveGun.Changed || ActiveAlt.Changed) CheckModdedColors();
-        else CheckVanillaColors();
-
-        // GunColorController.Instance.UpdateGunColors();
-        // gctg?.UpdatePreview();
-
-        UpdateRenderers();
-    }
-
-    private void UpdateRenderers() {
-        if (GunControl.Instance is not { currentWeapon: { } currentWeapon }) return;
-
-        VanillaColors.Value = VanillaColorId.GetColors();
-        foreach (SkinnedMeshRenderer renderer in currentWeapon.GetComponentsInChildren<SkinnedMeshRenderer>()) {
-            Logger.LogInfo($"Rendering {VanillaColors.Value} onto {renderer.name}");
-
-            MaterialPropertyBlock block = new();
-            renderer.GetPropertyBlock(block);
-            block.SetColor(CustomColor1, VanillaColors.Value.Color1);
-            block.SetColor(CustomColor2, VanillaColors.Value.Color2);
-            block.SetColor(CustomColor3, VanillaColors.Value.Color3);
-            renderer.SetPropertyBlock(block);
-        }
-    }
-
-    private void CheckVanillaColors() {
-        VanillaColors.Value = VanillaColorId.GetColors();
-
-        if (VanillaColors.Changed) {
-            Logger.LogInfo($"Setting Modded Colors to Vanilla Colors: {VanillaColors.Value}");
-            ModdedColorId.SetColors(VanillaColors.Value);
-        }
-    }
-
-    internal void CheckModdedColors() {
-        ModdedColors.Value = ModdedColorId.GetColors();
-
-        Logger.LogInfo($"Setting Vanilla Colors to Modded Colors: {ModdedColors.Value}");
-        VanillaColorId.SetColors(ModdedColors.Value);
     }
 }

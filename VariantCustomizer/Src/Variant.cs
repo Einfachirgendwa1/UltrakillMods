@@ -1,11 +1,10 @@
 ﻿using PluginConfig.API;
 using PluginConfig.API.Fields;
 using UnityEngine;
-using VariantCustomizer.Bridge;
 
 namespace VariantCustomizer;
 
-public class VariantConfiguration {
+public class Variant {
     private readonly bool alt;
 
     private readonly int gun;
@@ -14,7 +13,7 @@ public class VariantConfiguration {
     private ColorField? color2;
     private ColorField? color3;
 
-    public VariantConfiguration(int gun, bool alt, int variation) {
+    public Variant(int gun, bool alt, int variation) {
         this.gun = gun;
         this.alt = alt;
         this.variation = variation;
@@ -26,8 +25,8 @@ public class VariantConfiguration {
         color3 = new ColorField(parentPanel, "Color 3", parentPanel.guid + ".color3", Color.white);
 
         VariantColorId cid = new(gun, alt, variation);
-        color1.onValueChange += data => cid.SetColors(new GunColors(data.value, color2.value, color3.value));
-        color2.onValueChange += data => cid.SetColors(new GunColors(color1.value, data.value, color3.value));
-        color3.onValueChange += data => cid.SetColors(new GunColors(color1.value, color2.value, data.value));
+        color1.onValueChange += data => cid.SetColors(new GunColorPreset(data.value, color2.value, color3.value));
+        color2.onValueChange += data => cid.SetColors(new GunColorPreset(color1.value, data.value, color3.value));
+        color3.onValueChange += data => cid.SetColors(new GunColorPreset(color1.value, color2.value, data.value));
     }
 }
