@@ -1,6 +1,5 @@
 ﻿using System;
 using BepInEx;
-using Common;
 using PluginConfig.API;
 using PluginConfig.API.Fields;
 using UnityEngine;
@@ -16,10 +15,6 @@ public class VariantCustomizer : BaseUnityPlugin {
     private static readonly int CustomColor1 = Shader.PropertyToID("_CustomColor1");
     private static readonly int CustomColor2 = Shader.PropertyToID("_CustomColor2");
     private static readonly int CustomColor3 = Shader.PropertyToID("_CustomColor3");
-
-    private static readonly Observed<int> ActiveGun = new();
-    private static readonly Observed<bool> ActiveAlt = new();
-    private static readonly Observed<int> ActiveVariant = new();
 
     private static readonly string[] WeaponWindows = {
         "Revolver Window",
@@ -52,6 +47,8 @@ public class VariantCustomizer : BaseUnityPlugin {
 
     private GunColorSetter[]? colorSetters;
     private GameObject? currentWeaponCache;
+
+    private int lastClickedVariant = -1;
 
     private BoolField? modEnabled;
 
@@ -119,7 +116,7 @@ public class VariantCustomizer : BaseUnityPlugin {
             if (!ReferenceEquals(shop, lastShop)) {
                 lastShop = shop;
 
-                colorSetters = shop.GetComponentsInChildren<GunColorSetter>();
+                colorSetters = shop.GetComponentsInChildren<GunColorSetter>(true);
                 for (int g = 0; g < 5; g++) {
                     GameObject window = shop.transform.Find(WeaponWindows[g]).gameObject
                                         ?? throw new Exception("Could not find window");
@@ -169,8 +166,13 @@ public class VariantCustomizer : BaseUnityPlugin {
     }
 
     private void ApplyModColors() {
+        Logger.LogInfo("Applying mod colors");
+
         dirty = true;
-        if (colorSetters is null) return;
+        if (colorSetters is null) {
+            Logger.LogInfo("Skipping applying colors to shop terminal because colorSetters is null");
+            return;
+        }
 
         for (int gun = 0; gun < variants.GetLength(0); gun++) {
             for (int alt = 0; alt < variants.GetLength(1); alt++) {
@@ -233,26 +235,56 @@ public class VariantCustomizer : BaseUnityPlugin {
             newColorButton.transform.SetAsLastSibling();
 
             int variant = i;
-            newColorButton
-                .GetComponent<Button>()
-                .Also(button => Assert(button is not null, () => "Color Button not found!"))
-                .onClick
-                .AddListener(() => {
-                        ActiveGun.Value = gun;
-                        ActiveVariant.Value = variant + 1;
-                        ActiveAlt.Value = gctg.altVersion;
-
-                        Logger.LogFatal("Setting gun to "
-                                        + ActiveGun.Value
-                                        + ", variant to "
-                                        + ActiveVariant.Value
-                                        + ", alt to "
-                                        + ActiveAlt.Value);
-                    }
-                );
-
-
-            Canvas.ForceUpdateCanvases();
+            newColorButton.GetComponent<Button>().onClick.AddListener(() => lastClickedVariant = variant);
         }
+
+        GameObject colors = Find(Logger, mainWindow, "Window", "Custom", "Colors")
+                            ?? throw new NullReferenceException("Could not find colors panel");
+
+
+        GameObject sliders1 = colors.FindAssertExists(Logger, "Color 1", "Sliders");
+        sliders1.FindAssertExists(Logger, "Red", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color1.r = e;
+        });
+        sliders1.FindAssertExists(Logger, "Green", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color1.g = e;
+        });
+        sliders1.FindAssertExists(Logger, "Blue", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color1.b = e;
+        });
+        sliders1.FindAssertExists(Logger, "Metal", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color1.a = e;
+        });
+
+        GameObject sliders2 = colors.FindAssertExists(Logger, "Color 2", "Sliders");
+        sliders2.FindAssertExists(Logger, "Red", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color2.r = e;
+        });
+        sliders2.FindAssertExists(Logger, "Green", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color2.g = e;
+        });
+        sliders2.FindAssertExists(Logger, "Blue", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color2.b = e;
+        });
+        sliders2.FindAssertExists(Logger, "Metal", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color2.a = e;
+        });
+
+        GameObject sliders3 = colors.FindAssertExists(Logger, "Color 3", "Sliders");
+        sliders3.FindAssertExists(Logger, "Red", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color3.r = e;
+        });
+        sliders3.FindAssertExists(Logger, "Green", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color3.g = e;
+        });
+        sliders3.FindAssertExists(Logger, "Blue", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color3.b = e;
+        });
+        sliders3.FindAssertExists(Logger, "Metal", "Slider").GetComponent<Slider>().onValueChanged.AddListener(e => {
+            variants[gun, gctg.altVersion ? 1 : 0, lastClickedVariant].color3.a = e;
+        });
+
+
+        Canvas.ForceUpdateCanvases();
     }
 }
