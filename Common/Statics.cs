@@ -8,6 +8,7 @@ using BepInEx.Logging;
 using JetBrains.Annotations;
 using PluginConfig.API;
 using UnityEngine;
+using Logger = BepInEx.Logging.Logger;
 
 namespace Common {
     public static class Statics {
@@ -20,9 +21,8 @@ namespace Common {
             return config;
         }
 
-        public static string InExeDir(string path) {
-            return Path.Combine(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!, path);
-        }
+        public static string InExeDir(string path) =>
+            Path.Combine(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!, path);
 
         public static Stream GetEmbeddedResource(string path) {
             string fullPath = $"UltrakillMods.EmbeddedResources.{path}";
@@ -112,7 +112,7 @@ namespace Common {
 
         [MustUseReturnValue]
         public static List<Transform> Children(this Transform transform) {
-            List<Transform> children = new List<Transform>();
+            List<Transform> children = new();
 
             foreach (Transform child in transform) {
                 children.Add(child);
@@ -122,9 +122,7 @@ namespace Common {
         }
 
         [MustUseReturnValue]
-        public static int ToInt(this bool b) {
-            return b ? 1 : 0;
-        }
+        public static int ToInt(this bool b) => b ? 1 : 0;
 
         public static T Also<T>(this T thing, Action<T> action) {
             action(thing);
@@ -140,6 +138,10 @@ namespace Common {
 
         public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action) {
             foreach (T item in collection) action(item);
+        }
+
+        public static ManualLogSource LogSource(string name) {
+            return new ManualLogSource(name).Also(logger => Logger.Sources.Add(logger));
         }
 
         public class PrivateField<T, TReturn> {

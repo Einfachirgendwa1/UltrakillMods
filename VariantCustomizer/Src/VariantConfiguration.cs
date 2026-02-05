@@ -1,20 +1,23 @@
 ﻿using PluginConfig.API;
 using PluginConfig.API.Fields;
 using UnityEngine;
+using VariantCustomizer.Bridge;
 
 namespace VariantCustomizer;
 
 public class VariantConfiguration {
+    private readonly bool alt;
+
+    private readonly int gun;
+    private readonly int variation;
     private ColorField? color1;
     private ColorField? color2;
     private ColorField? color3;
 
-    internal GunColorPreset GetColorPreset() {
-        return new GunColorPreset(color1!.value, color2!.value, color3!.value);
-    }
-
-    private static void MarkDirty(ColorField.ColorValueChangeEvent _) {
-        VariantCustomizer.Dirty = true;
+    public VariantConfiguration(int gun, bool alt, int variation) {
+        this.gun = gun;
+        this.alt = alt;
+        this.variation = variation;
     }
 
     internal void Subpanel(ConfigPanel parentPanel) {
@@ -22,8 +25,9 @@ public class VariantConfiguration {
         color2 = new ColorField(parentPanel, "Color 2", parentPanel.guid + ".color2", Color.white);
         color3 = new ColorField(parentPanel, "Color 3", parentPanel.guid + ".color3", Color.white);
 
-        color1.onValueChange += MarkDirty;
-        color2.onValueChange += MarkDirty;
-        color3.onValueChange += MarkDirty;
+        VariantColorId cid = new(gun, alt, variation);
+        color1.onValueChange += data => cid.SetColors(new GunColors(data.value, color2.value, color3.value));
+        color2.onValueChange += data => cid.SetColors(new GunColors(color1.value, data.value, color3.value));
+        color3.onValueChange += data => cid.SetColors(new GunColors(color1.value, color2.value, data.value));
     }
 }

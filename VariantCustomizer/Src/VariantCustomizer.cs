@@ -1,9 +1,11 @@
 ﻿using System;
 using BepInEx;
+using Common;
 using PluginConfig.API;
 using PluginConfig.API.Fields;
 using UnityEngine;
 using UnityEngine.UI;
+using VariantCustomizer.Bridge;
 using static Common.Statics;
 
 namespace VariantCustomizer;
@@ -14,6 +16,9 @@ public class VariantCustomizer : BaseUnityPlugin {
     private static readonly int CustomColor2 = Shader.PropertyToID("_CustomColor2");
     private static readonly int CustomColor3 = Shader.PropertyToID("_CustomColor3");
 
+    private static readonly Observed<int> ActiveGun = new();
+    private static readonly Observed<bool> ActiveAlt = new();
+    private static readonly Observed<int> ActiveVariant = new();
 
     private static readonly string[] WeaponWindows = {
         "Revolver Window",
@@ -37,6 +42,9 @@ public class VariantCustomizer : BaseUnityPlugin {
 
     private Gun[] guns = { };
     private BoolField? modEnabled;
+
+    private static VariantColorId ModdedColorId => new(ActiveGun.Value, ActiveAlt.Value, ActiveVariant.Value);
+    private static VanillaColorId VanillaColorId => new(ActiveGun.Value, ActiveAlt.Value);
 
     private void Awake() {
         modEnabled = new BoolField(config.rootPanel, "Enabled", "enabled", true);
@@ -93,21 +101,20 @@ public class VariantCustomizer : BaseUnityPlugin {
 
         GunColorGetter colorGetter = currentWeapon.GetComponentInChildren<GunColorGetter>();
         bool alternate = colorGetter is not null && colorGetter.altVersion;
-
-        Gun gun = guns[gunControl.currentSlotIndex - 1];
-        bool useCustomColors = gun.UseCustomColors(allowNotUnlocked!.value) && modEnabled!.value;
-
-        VariantConfiguration variantConfig = gun.GetVariantConfig(gunControl.currentVariationIndex, alternate);
         SkinnedMeshRenderer[] renderers = currentWeapon.GetComponentsInChildren<SkinnedMeshRenderer>();
 
         foreach (SkinnedMeshRenderer renderer in renderers) {
-            GunColorPreset colors = useCustomColors ? variantConfig.GetColorPreset() : gun.GetNormalColor(alternate);
+            VariantColorId cid = new(gunControl.currentSlotIndex - 1, alternate,
+                gunControl.currentVariationIndex);
+
+            GunColors colors = cid.GetColors();
+            Logger.LogInfo($"got colors for {cid.ColorId("<num>")}: " + colors);
 
             MaterialPropertyBlock block = new();
             renderer.GetPropertyBlock(block);
-            block.SetColor(CustomColor1, colors.color1);
-            block.SetColor(CustomColor2, colors.color2);
-            block.SetColor(CustomColor3, colors.color3);
+            block.SetColor(CustomColor1, colors.Color1);
+            block.SetColor(CustomColor2, colors.Color2);
+            block.SetColor(CustomColor3, colors.Color3);
             renderer.SetPropertyBlock(block);
         }
     }
@@ -167,12 +174,36 @@ public class VariantCustomizer : BaseUnityPlugin {
                 .Also(button => Assert(button is not null, () => "Color Button not found!"))
                 .onClick
                 .AddListener(() => {
-                        // TODO
+                        ActiveGun.Value = gun;
+                        ActiveVariant.Value = variant + 1;
+                        ActiveAlt.Value = gctg.altVersion;
+
+                        Logger.LogFatal("Setting gun to "
+                                        + ActiveGun.Value
+                                        + ", variant to "
+                                        + ActiveVariant.Value
+                                        + ", alt to "
+                                        + ActiveAlt.Value);
                     }
                 );
 
 
             Canvas.ForceUpdateCanvases();
         }
+    }
+
+    internal void Redraw() {
+        if (GunControl.Instance is not { currentWeapon: { } currentWeapon } gunControl) return;
+
+        ActiveGun.Value = gunControl.currentSlotIndex;
+        ActiveVariant.Changed.Then(() => Logger.LogInfo($"Active gun set to {ActiveGun.Value}"));
+
+        ActiveVariant.Value = gunControl.currentVariationIndex + 1;
+        ActiveVariant.Changed.Then(() => Logger.LogInfo($"Active variation changed to {ActiveVariant.Value}"));
+
+        GunColorTypeGetter gctg = currentWeapon.GetComponentInChildren<GunColorTypeGetter>();
+
+        ActiveAlt.Value = gctg is { altVersion: true };
+        ActiveAlt.Changed.Then(() => Logger.LogInfo($"Active alt set to {ActiveAlt.Value}"));
     }
 }

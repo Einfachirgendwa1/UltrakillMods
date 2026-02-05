@@ -4,9 +4,15 @@ using PluginConfig.API;
 namespace VariantCustomizer;
 
 public class GunConfiguration {
-    private readonly VariantConfiguration blueVariant = new();
-    private readonly VariantConfiguration greenVariant = new();
-    private readonly VariantConfiguration redVariant = new();
+    private readonly VariantConfiguration blueVariant;
+    private readonly VariantConfiguration greenVariant;
+    private readonly VariantConfiguration redVariant;
+
+    public GunConfiguration(int gun, bool alt) {
+        blueVariant = new VariantConfiguration(gun, alt, 0);
+        greenVariant = new VariantConfiguration(gun, alt, 1);
+        redVariant = new VariantConfiguration(gun, alt, 2);
+    }
 
     internal VariantConfiguration GetVariantConfig(int variantIndex) {
         return variantIndex switch {
